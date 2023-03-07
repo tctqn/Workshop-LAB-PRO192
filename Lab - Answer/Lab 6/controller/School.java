@@ -1,5 +1,10 @@
 package controller;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Scanner;
@@ -14,11 +19,11 @@ public class School {
 
 	// Implement display method
 	public void displayStudent(ArrayList<Student> students) {
-			System.out.println("List of students");
-			System.out.println("------------------------------");
-			students.forEach(student -> System.out.println(student));
-			System.out.println("------------------------------");
-			System.out.println("Total: " + students.size());	
+		System.out.println("List of students");
+		System.out.println("------------------------------");
+		students.forEach(student -> System.out.println(student));
+		System.out.println("------------------------------");
+		System.out.println("Total: " + students.size());
 	}
 
 	// Implement add student method
@@ -65,10 +70,9 @@ public class School {
 
 	}
 
-	public Student addStudent(Student student) {
+	public void addStudent(Student student) {
 		this.inputStudent(student);
 		students.add(student);
-		return student;
 	}
 
 	// Implement get list of student
@@ -80,7 +84,7 @@ public class School {
 	public ArrayList<Student> searchByName() {
 		Scanner sc = new Scanner(System.in);
 		System.out.print("Enter name: ");
-		 String name = sc.nextLine();
+		String name = sc.nextLine();
 		while (!Validation.isValidName(name)) {
 			System.out.println(name + "while");
 			System.out.println("Invalid Name");
@@ -92,7 +96,7 @@ public class School {
 		ArrayList<Student> searchedList = new ArrayList<>();
 		students.forEach((student) -> {
 			String[] s = student.getName().split("\\s+");
-			if(s.length==1) {
+			if (s.length == 1) {
 				if (s[0].toLowerCase().compareTo(namef.toLowerCase()) == 0)
 					searchedList.add(student);
 			} else {
@@ -108,7 +112,7 @@ public class School {
 		Scanner sc = new Scanner(System.in);
 		System.out.print("Enter ID: ");
 		String id = sc.nextLine();
-		while (!id.matches("^[A-Za-z0-9]{8}$")) {
+		while (!id.matches("^[A-Za-z0-9]$")) {
 			System.out.println("Invalid ID");
 			System.out.println("<=====Input-Again=====>");
 			System.out.print("Enter ID: ");
@@ -133,16 +137,16 @@ public class School {
 			public int compare(Student o1, Student o2) {
 				String[] c1 = o1.getName().split("\\s+");
 				String[] c2 = o2.getName().split("\\s+");
-				if(c1.length!=1 && c2.length!=1) {
+				if (c1.length != 1 && c2.length != 1) {
 					String s1 = o1.getName().substring(o1.getName().lastIndexOf(" ")).toLowerCase();
 					String s2 = o2.getName().substring(o2.getName().lastIndexOf(" ")).toLowerCase();
 					return s1.compareTo(s2);
-				} else if(c1.length!=1 && c2.length==1) {
+				} else if (c1.length != 1 && c2.length == 1) {
 					String s1 = o1.getName().substring(o1.getName().lastIndexOf(" ")).toLowerCase();
 					return s1.compareTo(c2[0]);
-				} else if (c1.length!=1 && c2.length==1) {
+				} else if (c1.length != 1 && c2.length == 1) {
 					String s2 = o2.getName().substring(o1.getName().lastIndexOf(" ")).toLowerCase();
-					return s2.compareTo(c1[0]);					
+					return s2.compareTo(c1[0]);
 				} else {
 					return c1[0].toLowerCase().compareTo(c2[0].toLowerCase());
 				}
@@ -164,5 +168,47 @@ public class School {
 		sortedList.sort((o1, o2) -> Double.compare(o2.getAverage(), o1.getAverage()));
 		return sortedList;
 	}
+
+	// Implement Read and Write File Method
+
+	public void readStudentFromFile(String fileName) throws FileNotFoundException {
+		File file = new File(fileName);
+		Scanner sc = new Scanner(file);
+		
+		while(sc.hasNextLine()) {
+			String line = sc.nextLine();
+			String[] item = line.split(";");
+			String id = item[0];
+			String name = item[1];
+			Double aver = Double.parseDouble(item[2]);
+			Student newStd = new Student(id,name,aver);
+			students.add(newStd);			
+		}
+	}
+	
+	public void writeToFileAppend() throws FileNotFoundException, IOException {
+		for(Student student:students) {
+			String outputText = student.getID() + ";" +student.getName() + "; " + student.getAverage();
+			saveToFile("output.txt",outputText,true);
+		}
+	}
+	public void writeToFileOver() throws FileNotFoundException, IOException {
+		saveToFile("output.txt","<=====List-Students=====>",false);
+		for(Student student:students) {
+			String outputText = student.getID() + ";" +student.getName() + "; " + student.getAverage();
+			saveToFile("output.txt",outputText,true);
+		}
+	}
+	public static void saveToFile(String filename,String text,boolean append) throws IOException{
+		File file = new File(filename);
+		
+		FileWriter fw = new FileWriter(file,append);
+		
+		PrintWriter pw = new PrintWriter(fw);
+		
+		pw.println(text);
+		pw.close();
+	}
+	
 
 }

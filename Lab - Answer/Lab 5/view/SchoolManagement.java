@@ -7,13 +7,17 @@ import controller.School;
 import model.Student;
 
 public class SchoolManagement extends Menu {
-	School school = new School();
-	ArrayList<Student> students = new ArrayList<>();
-	static String[] options = { "Display all students", "Search student", "Add new student", "Sorting display",
-			"Exit" };
-
+	private static School school = new School();
+	private static ArrayList<Student> students = new ArrayList<>();
+	static String[] options= { "Display all students", "Search student", "Add new student", "Sorting display",
+	"Exit" };
 	public SchoolManagement() {
 		super("School Management System", options);
+	}
+
+	public static void main(String[] args) {
+		SchoolManagement smgm = new SchoolManagement();
+		smgm.run();
 	}
 
 	@Override
@@ -30,7 +34,7 @@ public class SchoolManagement extends Menu {
 			if (students.isEmpty()) {
 				System.out.println("There is no student to show!");
 			} else
-			menuSearch();
+				menuSearch();
 			break;
 		case 3:
 			students.add(school.addStudent(new Student()));
@@ -39,7 +43,7 @@ public class SchoolManagement extends Menu {
 			if (students.isEmpty()) {
 				System.out.println("There is no student to show!");
 			} else
-			menuSort();
+				menuSort();
 			break;
 		default:
 			break;
@@ -50,21 +54,7 @@ public class SchoolManagement extends Menu {
 	public void menuSearch() {
 		Scanner sc = new Scanner(System.in);
 		options = new String[] { "Find by Name", "Find by ID", "Back to main menu" };
-		Menu s = new Menu("Student Searching", options) {
-
-			@Override
-			public void execute(int choice) {
-				switch (choice) {
-				case 1:
-					school.displayStudent(school.searchByName());
-					break;
-				case 2:
-					school.displayStudent(school.searchByID());
-					break;
-				default:
-					break;
-				}
-			}
+		Menu searchMenu = new Menu("Student Searching", options) {
 
 			@Override
 			public void run() {
@@ -72,8 +62,10 @@ public class SchoolManagement extends Menu {
 				while (true) {
 					this.displayMenu();
 					int choice = getChoice();
-					if (choice == 3)
+					if (choice == 3) {
+//						smgm.run();
 						break;
+					}
 					if (choice < 0 || choice > options.length) {
 						System.out.println("Your selection must be a number in [1-" + options.length + "]");
 						continue;
@@ -82,15 +74,40 @@ public class SchoolManagement extends Menu {
 				}
 
 			}
+
+			@Override
+			public void execute(int choice) {
+				switch (choice) {
+				case 1:
+					ArrayList<Student> subStds = new ArrayList<>();
+					subStds.addAll(school.searchByName());
+					if (subStds.isEmpty()) {
+						System.out.println("NOT FOUND!");
+					} else
+						school.displayStudent(subStds);
+					break;
+				case 2:
+					subStds = new ArrayList<>();
+					subStds.addAll(school.searchByID());
+					if (subStds.isEmpty()) {
+						System.out.println("NOT FOUND!");
+					} else
+						school.displayStudent(subStds);
+					break;
+				default:
+					break;
+				}
+			}
+
 		};
-		s.run();
+		searchMenu.run();
 	}
 
 	public void menuSort() {
 		options = new String[] { "Sort by StudentID", "Sort by Name", "Sort by Average point in descending",
 				"Back to main menu" };
 
-		Menu s = new Menu("Student Sorting", options) {
+		Menu sortMenu = new Menu("Student Sorting", options) {
 
 			@Override
 			public void run() {
@@ -127,13 +144,15 @@ public class SchoolManagement extends Menu {
 
 			}
 		};
-		s.run();
+		sortMenu.run();
 	}
 
 	@Override
 	public void run() {
 		Scanner sc = new Scanner(System.in);
 		while (true) {
+			options = new String[]{ "Display all students", "Search student", "Add new student", "Sorting display",
+			"Exit" };
 			this.displayMenu();
 			int choice = getChoice();
 			if (choice == 5) {
@@ -150,7 +169,4 @@ public class SchoolManagement extends Menu {
 			execute(choice);
 		}
 	}
-	
-	
-
 }

@@ -12,11 +12,6 @@ public class Validation {
 		return true;
 	}
 	public static boolean isValidID(ArrayList<Student> students,String id) {
-		if(id.length()<8) return false;
-		String s1 = id.substring(0,2);
-		String s2 = id.substring(2);
-		if (!(s1.matches("^[A-Za-z]{2}$")&&s2.matches("^[0-9]{6}$"))) return false;
-		else {
 			for(Student student:students) {
 				if(student.getID().equals(id.toUpperCase())) {
 					System.out.println("This ID already existed");
@@ -24,7 +19,6 @@ public class Validation {
 					return false;
 				}
 			}
-		}
 		return true;
 	}
 	
