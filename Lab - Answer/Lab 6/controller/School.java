@@ -96,7 +96,7 @@ public class School {
 		ArrayList<Student> searchedList = new ArrayList<>();
 		students.forEach((student) -> {
 			String[] s = student.getName().split("\\s+");
-			if(namef.compareTo(student.getName().toLowerCase()) == 0) searchedList.add(student);
+			if(namef.toLowerCase().compareTo(student.getName().toLowerCase()) == 0) searchedList.add(student);
 			if (s.length == 1) {
 				if (s[0].toLowerCase().compareTo(namef.toLowerCase()) == 0)
 					searchedList.add(student);
@@ -110,7 +110,6 @@ public class School {
 		});
 		return searchedList;
 	}
-
 	public ArrayList<Student> searchByID() {
 		Scanner sc = new Scanner(System.in);
 		System.out.print("Enter ID: ");
