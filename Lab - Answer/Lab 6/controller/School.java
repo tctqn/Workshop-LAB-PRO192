@@ -96,10 +96,13 @@ public class School {
 		ArrayList<Student> searchedList = new ArrayList<>();
 		students.forEach((student) -> {
 			String[] s = student.getName().split("\\s+");
+			if(namef.compareTo(student.getName().toLowerCase()) == 0) searchedList.add(student);
 			if (s.length == 1) {
 				if (s[0].toLowerCase().compareTo(namef.toLowerCase()) == 0)
 					searchedList.add(student);
 			} else {
+				if (s[0].toLowerCase().compareTo(namef.toLowerCase()) == 0)
+					searchedList.add(student);
 				String c = student.getName().substring(student.getName().lastIndexOf(" ")).toLowerCase().trim();
 				if (c.compareTo(namef.toLowerCase()) == 0)
 					searchedList.add(student);
@@ -112,7 +115,7 @@ public class School {
 		Scanner sc = new Scanner(System.in);
 		System.out.print("Enter ID: ");
 		String id = sc.nextLine();
-		while (!id.matches("^[A-Za-z0-9]$")) {
+		while (!id.matches("^[A-Za-z0-9]{3}$")) {
 			System.out.println("Invalid ID");
 			System.out.println("<=====Input-Again=====>");
 			System.out.print("Enter ID: ");
